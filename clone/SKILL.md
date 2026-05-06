@@ -19,7 +19,7 @@ The skill accepts an optional argument selecting where the fork lands:
 
 If the user provides any other argument, the script exits with an error explaining the valid options.
 
-## First-time setup (Accessibility permission for `here` mode)
+## First-time execution (Accessibility permission for `here` mode)
 
 `/clone` defaults to `here`, which sends Cmd+T to the front Terminal window via AppleScript / System Events. macOS gates this behind **Accessibility permission**, and the system permission dialog **does not always appear automatically**. When it doesn't, `osascript` fails with `not allowed to send keystrokes. (1002)` and the script exits non-zero.
 
@@ -56,7 +56,7 @@ If `here` is requested but no Terminal window is currently open, the script fall
 ## Caveats
 
 - The fork is seeded from whatever has been **flushed to disk** at invocation time. The in-flight `/clone` turn itself may not appear in the cloned session — same caveat as `claude --resume` from any sibling shell.
-- `here` mode requires macOS Accessibility permission (see "First-time setup" above). `new` mode does not.
+- `here` mode requires macOS Accessibility permission (see "First-time execution" above). `new` mode does not.
 - Apple Terminal's split-panes (Cmd+D) aren't cleanly addressable via AppleScript, so `here` creates a *tab*, not a literal split pane. If you want split panes, use `new` and arrange windows manually, or open a feature request to add tmux integration here.
 - Only Apple Terminal is currently wired up. Other terminals (`iTerm.app`, `WarpTerminal`, `ghostty`) trigger a stderr warning and the script falls back to driving Terminal.app anyway.
 - Requires `lsof`, `osascript`, and `claude` on `$PATH` — all present by default on the user's Macs.
