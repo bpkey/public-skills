@@ -1,6 +1,6 @@
 # Public Skills
 
-A small, curated set of [Claude Code](https://claude.com/claude-code) global skills that fill gaps in the built-in commands. Each one is a thin shim around AppleScript / Apple Terminal — macOS only.
+A small collection of [Claude Code](https://claude.com/claude-code) helpers we use ourselves to work more efficiently with Claude — shared in case they help you too. Each one installs as a global skill and runs from a slash command in any Claude Code session. macOS only for now (thin shims around AppleScript / Apple Terminal).
 
 ## What's here
 
