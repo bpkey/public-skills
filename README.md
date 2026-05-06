@@ -31,14 +31,6 @@ The skill becomes available in the next Claude Code session — type `/clone`, `
 
 ## Source of truth
 
-The canonical files for these skills live in the author's private [`tools-config`](https://github.com/bpkey/tools-config) repo at `skills/<name>/`. The directory entries in *this* repo are **relative symlinks** pointing back to that path:
+This repository **is** the canonical source for these three skills — `clone/`, `newTab/`, and `newWindow/` are real directories containing the actual `SKILL.md` and helper scripts. Edit them here.
 
-```
-clone     -> ../tools-config/skills/clone
-newTab    -> ../tools-config/skills/newTab
-newWindow -> ../tools-config/skills/newWindow
-```
-
-The symlinks resolve on the author's machines because `tools-config` and `public-skills` sit side-by-side under `~/repo/`. **If you cloned this repo standalone, the symlinks will be broken** — you can either also clone `tools-config` next to it, or copy the resolved file contents from this repo's GitHub web view (GitHub renders symlinked directories as their resolved targets when both repos are accessible to the same user).
-
-Edits should always be made in `tools-config/skills/<name>/`, not here.
+The author's other (private) machine-config repo includes relative symlinks pointing back into this repo so the skills become available under `~/.claude/skills/<name>/` without copying any files. That is purely a consumer-side detail; if you've cloned this repo, you have everything you need.
