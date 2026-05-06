@@ -32,10 +32,36 @@ whether to install all of them or just some. If I say "some",
 wait for me to reply with the names I want.
 
 For each skill I confirm, create a symlink from the skill directory
-into ~/.claude/skills/<name>/. Then list the contents of each
-~/.claude/skills/<name>/ you created so I can verify, and remind me
-I can run /update-blueprintkey-public-skills (or git pull from the
-clone) to update later.
+into the skills install destination (see below). Then list the
+contents of each <destination>/<name>/ you created so I can verify,
+and remind me I can run /update-blueprintkey-public-skills (or git
+pull from the clone) to update later.
+
+Resilience: at every step, keep the end goal in mind — a working
+install of the skills I picked. If a command errors out (clone,
+mkdir, ln, readlink, ls), don't go silent and don't stop. Tell me
+in plain language what failed and the likely cause, fix it
+automatically when safe (examples below), or ask me one focused
+question to unblock. Only abort if I explicitly say so.
+
+Cloning, specifically:
+- If the parent directory of the path I gave doesn't exist, run
+  `mkdir -p` on the parent and continue — don't fail on that alone.
+- If the destination already exists and is a clone of the same
+  repo, treat it as already-cloned and proceed to the symlink step.
+- If the destination exists but is something else, stop and ask
+  me before touching it.
+
+Skills install destination, specifically:
+- Before creating any symlinks, check whether `~/.claude/skills`
+  is itself a symbolic link (`readlink ~/.claude/skills`). If it
+  is, resolve it and use the resolved path as the install
+  destination — that's where I've chosen for my skills to live.
+  Show me the resolved path before creating links so I know where
+  they're going.
+- If `~/.claude/skills` doesn't exist, create it (`mkdir -p`) and
+  use it directly.
+- Otherwise, use `~/.claude/skills` as-is.
 ```
 
 ### B. Command line
