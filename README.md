@@ -40,9 +40,7 @@ I want to install the /clone, /newTab, /newWindow, and
 /update-blueprintkey-public-skills Claude Code skills from
 https://github.com/bpkey/public-skills.
 
-First, ask me where I'd like to clone the repo (suggest ~/repo if I
-already use that, otherwise the current directory) and wait for my
-answer.
+First, ask me where I'd like to clone the repo and wait for my answer.
 
 Once I confirm the location, git clone it there, then create symlinks
 from each of the four skill directories into ~/.claude/skills/<name>/.
