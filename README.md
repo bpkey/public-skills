@@ -12,15 +12,42 @@ A small, curated set of [Claude Code](https://claude.com/claude-code) global ski
 
 ## Installing
 
-Each top-level entry in this repo is a directory containing `SKILL.md` plus a helper script. To install one as a global skill, drop or symlink the directory under `~/.claude/skills/`:
+Three install paths — pick whichever fits.
+
+### 1. One-line curl (no clone)
+
+Pulls only these three skill directories from the repo's tarball into `~/.claude/skills/`:
 
 ```bash
+mkdir -p ~/.claude/skills && \
+curl -fsSL https://github.com/bpkey/public-skills/archive/refs/heads/main.tar.gz | \
+tar -xz -C ~/.claude/skills --strip-components=1 \
+  public-skills-main/clone \
+  public-skills-main/newTab \
+  public-skills-main/newWindow
+```
+
+Re-run the same command later to update.
+
+### 2. Ask Claude Code to install them
+
+Paste this prompt into a Claude Code session:
+
+> Install the `/clone`, `/newTab`, and `/newWindow` skills from `https://github.com/bpkey/public-skills` into `~/.claude/skills/`. Each is a directory containing a `SKILL.md` and a helper shell script. Don't clone the repo — fetch only those three directories from the `main` branch tarball, preserve the executable bit on the helper scripts, and confirm by listing the contents of `~/.claude/skills/clone/`, `~/.claude/skills/newTab/`, and `~/.claude/skills/newWindow/`.
+
+### 3. Clone and symlink (if you want `git pull` updates)
+
+Run this from wherever you keep your repos — the symlinks resolve via `$PWD` so the destination is up to you:
+
+```bash
+git clone https://github.com/bpkey/public-skills.git
+cd public-skills
 ln -s "$PWD/clone"     ~/.claude/skills/clone
 ln -s "$PWD/newTab"    ~/.claude/skills/newTab
 ln -s "$PWD/newWindow" ~/.claude/skills/newWindow
 ```
 
-The skill becomes available in the next Claude Code session — type `/clone`, `/newTab`, or `/newWindow`.
+After installing by any method, the skills become available in your next Claude Code session — type `/clone`, `/newTab`, or `/newWindow`.
 
 ## Requirements
 
