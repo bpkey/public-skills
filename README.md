@@ -36,19 +36,21 @@ To update later, run `/update-blueprintkey-public-skills` from inside any Claude
 Paste this prompt into Claude Code (or any AI coding tool with shell access):
 
 ```bash
-I want to install the /clone, /newTab, /newWindow, and
-/update-blueprintkey-public-skills Claude Code skills from
+I want to install Claude Code skills from
 https://github.com/bpkey/public-skills.
 
 First, ask me where I'd like to clone the repo and wait for my answer.
 
-Once I confirm the location, git clone it there, then create symlinks
-from each of the four skill directories into ~/.claude/skills/<name>/.
+Once I confirm the location, git clone it there. Then list every
+top-level directory in the clone that contains a SKILL.md file —
+each of those is an installable skill. Show me that list and ask
+whether to install all of them or just some. If I say "some",
+wait for me to reply with the names I want.
 
-Confirm by listing the contents of ~/.claude/skills/clone/,
-~/.claude/skills/newTab/, ~/.claude/skills/newWindow/, and
-~/.claude/skills/update-blueprintkey-public-skills/, and remind me I
-can run /update-blueprintkey-public-skills (or git pull from the
+For each skill I confirm, create a symlink from the skill directory
+into ~/.claude/skills/<name>/. Then list the contents of each
+~/.claude/skills/<name>/ you created so I can verify, and remind me
+I can run /update-blueprintkey-public-skills (or git pull from the
 clone) to update later.
 ```
 
