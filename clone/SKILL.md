@@ -36,8 +36,8 @@ To skip the setup entirely, use `/clone new` — it opens a new window via `do s
 Pass the user's argument straight through to the helper script (or `here` if they didn't provide one):
 
 ```bash
-~/repo/tools-config/skills/clone/clone.sh here   # default
-~/repo/tools-config/skills/clone/clone.sh new
+~/.claude/skills/clone/scripts/clone.sh here   # default
+~/.claude/skills/clone/scripts/clone.sh new
 ```
 
 Then echo the script's stdout back to the user (it prints `forked from <session-id> into new tab` or `... into new window`). On non-zero exit, surface the stderr message verbatim — it explains what went wrong (unknown mode, no transcript found, etc.).

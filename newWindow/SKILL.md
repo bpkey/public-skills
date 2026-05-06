@@ -17,7 +17,7 @@ Use this when you want a second Claude session in a separate window **without** 
 Run the helper script with no arguments:
 
 ```bash
-~/repo/tools-config/skills/newWindow/newWindow.sh
+~/.claude/skills/newWindow/scripts/newWindow.sh
 ```
 
 Echo the script's stdout back to the user (`opened new window with fresh claude in <cwd>`). On non-zero exit, surface stderr verbatim.

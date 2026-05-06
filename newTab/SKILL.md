@@ -14,7 +14,7 @@ Use this when you want a second Claude session in parallel **without** carrying 
 Run the helper script with no arguments:
 
 ```bash
-~/repo/tools-config/skills/newTab/newTab.sh
+~/.claude/skills/newTab/scripts/newTab.sh
 ```
 
 Echo the script's stdout back to the user (`opened new tab with fresh claude in <cwd>` or, if no front Terminal window existed, `opened new window with fresh claude in <cwd>`). On non-zero exit, surface stderr verbatim — it explains what went wrong (missing Accessibility permission, etc.).

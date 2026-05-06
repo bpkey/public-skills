@@ -7,31 +7,15 @@ A small collection of [Claude Code](https://claude.com/claude-code) helpers we u
 - **`/clone`** — fills a gap. Closest to the built-in `/branch`, but `/branch` swaps the current terminal into the fork; `/clone` keeps the original session alive in this tab and opens the fork in a sibling tab (default) or window. Backed by `claude --resume <id> --fork-session`.
 - **`/newTab`** — fills a gap. Nothing native opens a cold (non-resumed) Claude session in a new Terminal *tab* in the same window. Inherits the current working directory.
 - **`/newWindow`** — fills a gap. Nothing native opens a cold (non-resumed) Claude session in a new Terminal *window*. Inherits the current working directory.
-- **`/update-blueprintkey-public-skills`** — pulls the latest version of all the skills above by `git pull`-ing the local clone they were installed from. Only useful with the recommended clone+symlink install (option A below); the curl install has no update mechanism.
+- **`/update-blueprintkey-public-skills`** — pulls the latest version of all the skills above by `git pull`-ing the local clone they were installed from. Only useful with the clone+symlink install (options A or B below); the curl install has no update mechanism.
 
 `/newTab` and `/newWindow` start fresh — no transcript carryover, but the new shell `cd`s to the same `cwd` you ran the command from, so `claude` boots into the same project context. `/clone` carries the current conversation forward (and also stays in `cwd`).
 
 ## Installing
 
-**Recommended: option A (clone + symlink), or option B which is the same thing run interactively by an AI tool.** Both leave you with a real `git clone` that you can `git pull` to pick up updates. Option C freezes a snapshot at install time — to update, you'd have to re-run the install command and remember to do so.
+**Recommended: option A (Via Prompting) or option B (command line).** Both leave you with a real `git clone` that you can `git pull` to pick up updates. Option C freezes a snapshot at install time — to update, you'd have to re-run the install command and remember to do so.
 
-### A. Clone and symlink — recommended
-
-Run from wherever you keep your repos. The symlinks resolve via `$PWD`, so the clone destination is up to you:
-
-```bash
-git clone https://github.com/bpkey/public-skills.git
-cd public-skills
-ln -s "$PWD/clone"     ~/.claude/skills/clone
-ln -s "$PWD/newTab"    ~/.claude/skills/newTab
-ln -s "$PWD/newWindow" ~/.claude/skills/newWindow
-ln -s "$PWD/update-blueprintkey-public-skills" \
-      ~/.claude/skills/update-blueprintkey-public-skills
-```
-
-To update later, run `/update-blueprintkey-public-skills` from inside any Claude Code session — or `cd` back into the clone and `git pull` directly. The symlinks pick up changes automatically, no reinstall needed.
-
-### B. Let an AI tool install it for you (same as option A, interactive)
+### A. Via Prompting
 
 Paste this prompt into Claude Code (or any AI coding tool with shell access):
 
@@ -54,9 +38,33 @@ I can run /update-blueprintkey-public-skills (or git pull from the
 clone) to update later.
 ```
 
+### B. Command line
+
+Run from wherever you keep your repos. The symlinks resolve via `$PWD`, so the clone destination is up to you.
+
+**Install all skills:**
+
+```bash
+git clone https://github.com/bpkey/public-skills.git
+cd public-skills
+for d in */; do
+  [ -f "$d/SKILL.md" ] && ln -s "$PWD/${d%/}" ~/.claude/skills/${d%/}
+done
+```
+
+**Install just one skill** — replace `<skill-name>` with the directory name in the repo (e.g., `clone`, `newTab`, `newWindow`):
+
+```bash
+git clone https://github.com/bpkey/public-skills.git
+cd public-skills
+ln -s "$PWD/<skill-name>" ~/.claude/skills/<skill-name>
+```
+
+To update later, run `/update-blueprintkey-public-skills` from inside any Claude Code session — or `cd` back into the clone and `git pull` directly. The symlinks pick up changes automatically, no reinstall needed.
+
 ### C. Quick try — one-line curl (no clone, no updates)
 
-Useful only for a quick taste — there's no update mechanism, so eventually switch to option A.
+Useful only for a quick taste — there's no update mechanism, so eventually switch to option A or B.
 
 ```bash
 mkdir -p ~/.claude/skills && \
