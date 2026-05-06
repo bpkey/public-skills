@@ -12,11 +12,31 @@ A small, curated set of [Claude Code](https://claude.com/claude-code) global ski
 
 ## Installing
 
-Three install paths — pick whichever fits.
+**Recommended: option 1 (clone + symlink).** It's the only path that lets you `git pull` to pick up updates. Options 2 and 3 freeze a snapshot at install time — to update, you'd have to re-run the install command and remember to do so.
 
-### 1. One-line curl (no clone)
+### 1. Clone and symlink — recommended
 
-Pulls only these three skill directories from the repo's tarball into `~/.claude/skills/`:
+Run from wherever you keep your repos. The symlinks resolve via `$PWD`, so the clone destination is up to you:
+
+```bash
+git clone https://github.com/bpkey/public-skills.git
+cd public-skills
+ln -s "$PWD/clone"     ~/.claude/skills/clone
+ln -s "$PWD/newTab"    ~/.claude/skills/newTab
+ln -s "$PWD/newWindow" ~/.claude/skills/newWindow
+```
+
+To update later: `cd` back into the clone and `git pull` — the symlinks pick up changes automatically, no reinstall needed.
+
+### 2. Let an AI tool install it for you (same as option 1, interactive)
+
+Paste this prompt into Claude Code (or any AI coding tool with shell access):
+
+> I want to install the `/clone`, `/newTab`, and `/newWindow` Claude Code skills from `https://github.com/bpkey/public-skills`. First, ask me where I'd like to clone the repo (suggest `~/repo` if I already use that, otherwise the current directory) and wait for my answer. Once I confirm the location, `git clone` it there, then create symlinks from each of the three skill directories into `~/.claude/skills/<name>/`. Confirm by listing the contents of `~/.claude/skills/clone/`, `~/.claude/skills/newTab/`, and `~/.claude/skills/newWindow/`, and remind me I can `cd` into the clone and `git pull` to update later.
+
+### 3. Quick try — one-line curl (no clone, no updates)
+
+Useful only for a quick taste — there's no update mechanism, so eventually switch to option 1.
 
 ```bash
 mkdir -p ~/.claude/skills && \
@@ -27,25 +47,7 @@ tar -xz -C ~/.claude/skills --strip-components=1 \
   public-skills-main/newWindow
 ```
 
-Re-run the same command later to update.
-
-### 2. Ask Claude Code to install them
-
-Paste this prompt into a Claude Code session:
-
-> Install the `/clone`, `/newTab`, and `/newWindow` skills from `https://github.com/bpkey/public-skills` into `~/.claude/skills/`. Each is a directory containing a `SKILL.md` and a helper shell script. Don't clone the repo — fetch only those three directories from the `main` branch tarball, preserve the executable bit on the helper scripts, and confirm by listing the contents of `~/.claude/skills/clone/`, `~/.claude/skills/newTab/`, and `~/.claude/skills/newWindow/`.
-
-### 3. Clone and symlink (if you want `git pull` updates)
-
-Run this from wherever you keep your repos — the symlinks resolve via `$PWD` so the destination is up to you:
-
-```bash
-git clone https://github.com/bpkey/public-skills.git
-cd public-skills
-ln -s "$PWD/clone"     ~/.claude/skills/clone
-ln -s "$PWD/newTab"    ~/.claude/skills/newTab
-ln -s "$PWD/newWindow" ~/.claude/skills/newWindow
-```
+Re-running the same command overwrites with the latest `main`, but you'll only do that if you remember to.
 
 After installing by any method, the skills become available in your next Claude Code session — type `/clone`, `/newTab`, or `/newWindow`.
 
