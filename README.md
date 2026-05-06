@@ -4,9 +4,9 @@ A small collection of [Claude Code](https://claude.com/claude-code) helpers we u
 
 ## What's here
 
-- **`/cloneClaudeConversation`** — fills a gap. Closest to the built-in `/branch`, but `/branch` swaps the current terminal into the fork; `/cloneClaudeConversation` keeps the original session alive in this tab and opens the fork in a sibling tab (default) or window. Backed by `claude --resume <id> --fork-session`.
-- **`/newClaudeTab`** — fills a gap. Nothing native opens a cold (non-resumed) Claude session in a new Terminal *tab* in the same window. Inherits the current working directory.
-- **`/newClaudeWindow`** — fills a gap. Nothing native opens a cold (non-resumed) Claude session in a new Terminal *window*. Inherits the current working directory.
+- **`/cloneClaudeConversation`** — fills a gap. Closest to the built-in `/branch`, but `/branch` swaps the current terminal into the fork; `/cloneClaudeConversation` keeps the original session alive in this tab and opens the fork **alongside** it — in a sibling tab by default (`/cloneClaudeConversation` or `/cloneClaudeConversation here`), or in a new window with `/cloneClaudeConversation new`. Backed by `claude --resume <id> --fork-session`.
+- **`/newClaudeTab`** — fills a gap. Opens a fresh (non-resumed) Claude session in a new Terminal *tab*, in the **same working directory** as the running Claude — so the new session boots straight into your current project, no manual `cd` needed. (Cmd+T natively lands in `~`.)
+- **`/newClaudeWindow`** — same as `/newClaudeTab` but a new Terminal *window* instead of a tab.
 - **`/update-blueprintkey-public-skills`** — pulls the latest version of all the skills above by `git pull`-ing the local clone they were installed from. Only useful with the clone+symlink install (options A or B below); the curl install has no update mechanism.
 
 `/newClaudeTab` and `/newClaudeWindow` start fresh — no transcript carryover, but the new shell `cd`s to the same `cwd` you ran the command from, so `claude` boots into the same project context. `/cloneClaudeConversation` carries the current conversation forward (and also stays in `cwd`).
