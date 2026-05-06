@@ -32,7 +32,9 @@ To update later: `cd` back into the clone and `git pull` — the symlinks pick u
 
 Paste this prompt into Claude Code (or any AI coding tool with shell access):
 
-> I want to install the `/clone`, `/newTab`, and `/newWindow` Claude Code skills from `https://github.com/bpkey/public-skills`. First, ask me where I'd like to clone the repo (suggest `~/repo` if I already use that, otherwise the current directory) and wait for my answer. Once I confirm the location, `git clone` it there, then create symlinks from each of the three skill directories into `~/.claude/skills/<name>/`. Confirm by listing the contents of `~/.claude/skills/clone/`, `~/.claude/skills/newTab/`, and `~/.claude/skills/newWindow/`, and remind me I can `cd` into the clone and `git pull` to update later.
+```bash
+I want to install the /clone, /newTab, and /newWindow Claude Code skills from https://github.com/bpkey/public-skills. First, ask me where I'd like to clone the repo (suggest ~/repo if I already use that, otherwise the current directory) and wait for my answer. Once I confirm the location, git clone it there, then create symlinks from each of the three skill directories into ~/.claude/skills/<name>/. Confirm by listing the contents of ~/.claude/skills/clone/, ~/.claude/skills/newTab/, and ~/.claude/skills/newWindow/, and remind me I can cd into the clone and git pull to update later.
+```
 
 ### 3. Quick try — one-line curl (no clone, no updates)
 
