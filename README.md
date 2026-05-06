@@ -7,15 +7,15 @@ A small collection of [Claude Code](https://claude.com/claude-code) helpers we u
 - **`/clone`** — fills a gap. Closest to the built-in `/branch`, but `/branch` swaps the current terminal into the fork; `/clone` keeps the original session alive in this tab and opens the fork in a sibling tab (default) or window. Backed by `claude --resume <id> --fork-session`.
 - **`/newTab`** — fills a gap. Nothing native opens a cold (non-resumed) Claude session in a new Terminal *tab* in the same window. Inherits the current working directory.
 - **`/newWindow`** — fills a gap. Nothing native opens a cold (non-resumed) Claude session in a new Terminal *window*. Inherits the current working directory.
-- **`/update-blueprintkey-public-skills`** — pulls the latest version of all the skills above by `git pull`-ing the local clone they were installed from. Only useful with the recommended clone+symlink install (option 1 below); the curl install has no update mechanism.
+- **`/update-blueprintkey-public-skills`** — pulls the latest version of all the skills above by `git pull`-ing the local clone they were installed from. Only useful with the recommended clone+symlink install (option A below); the curl install has no update mechanism.
 
 `/newTab` and `/newWindow` start fresh — no transcript carryover, but the new shell `cd`s to the same `cwd` you ran the command from, so `claude` boots into the same project context. `/clone` carries the current conversation forward (and also stays in `cwd`).
 
 ## Installing
 
-**Recommended: option 1 (clone + symlink).** It's the only path that lets you `git pull` to pick up updates. Options 2 and 3 freeze a snapshot at install time — to update, you'd have to re-run the install command and remember to do so.
+**Recommended: option A (clone + symlink), or option B which is the same thing run interactively by an AI tool.** Both leave you with a real `git clone` that you can `git pull` to pick up updates. Option C freezes a snapshot at install time — to update, you'd have to re-run the install command and remember to do so.
 
-### 1. Clone and symlink — recommended
+### A. Clone and symlink — recommended
 
 Run from wherever you keep your repos. The symlinks resolve via `$PWD`, so the clone destination is up to you:
 
@@ -31,7 +31,7 @@ ln -s "$PWD/update-blueprintkey-public-skills" \
 
 To update later, run `/update-blueprintkey-public-skills` from inside any Claude Code session — or `cd` back into the clone and `git pull` directly. The symlinks pick up changes automatically, no reinstall needed.
 
-### 2. Let an AI tool install it for you (same as option 1, interactive)
+### B. Let an AI tool install it for you (same as option A, interactive)
 
 Paste this prompt into Claude Code (or any AI coding tool with shell access):
 
@@ -52,9 +52,9 @@ can run /update-blueprintkey-public-skills (or git pull from the
 clone) to update later.
 ```
 
-### 3. Quick try — one-line curl (no clone, no updates)
+### C. Quick try — one-line curl (no clone, no updates)
 
-Useful only for a quick taste — there's no update mechanism, so eventually switch to option 1.
+Useful only for a quick taste — there's no update mechanism, so eventually switch to option A.
 
 ```bash
 mkdir -p ~/.claude/skills && \
