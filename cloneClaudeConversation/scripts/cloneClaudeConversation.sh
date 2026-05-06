@@ -10,7 +10,7 @@ mode="${1:-here}"
 case "$mode" in
     here|new) ;;
     *)
-        err "clone: unknown mode '$mode' (expected 'here' for a new tab in the current window, or 'new' for a new window)"
+        err "cloneClaudeConversation: unknown mode '$mode' (expected 'here' for a new tab in the current window, or 'new' for a new window)"
         exit 2
         ;;
 esac
@@ -33,7 +33,7 @@ if [[ -z "$session_path" ]]; then
 fi
 
 if [[ -z "$session_path" || ! -f "$session_path" ]]; then
-    err "clone: could not locate the current session's transcript file."
+    err "cloneClaudeConversation: could not locate the current session's transcript file."
     err "       checked lsof -p \$PPID and ~/.claude/projects/<encoded-cwd>/"
     exit 1
 fi
@@ -79,11 +79,11 @@ open_in_new_tab() {
         # the raw error above so the user still sees what macOS actually said.
         if [[ "$err_output" == *"not allowed to send keystrokes"* ]]; then
             err ""
-            err "clone: 'here' mode needs macOS Accessibility permission to send Cmd+T."
+            err "cloneClaudeConversation: 'here' mode needs macOS Accessibility permission to send Cmd+T."
             err "       1. System Settings → Privacy & Security → Accessibility"
             err "       2. Enable Terminal and claude (click + to add if missing — \`which claude\` shows the path)"
             err "       3. Quit and relaunch Claude Code so the new permission takes effect"
-            err "       Or use \`/clone new\` (opens a new window, no Accessibility needed)."
+            err "       Or use \`/cloneClaudeConversation new\` (opens a new window, no Accessibility needed)."
         fi
         return $status
     fi
@@ -92,7 +92,7 @@ open_in_new_tab() {
 # 3. Dispatch.
 term="${TERM_PROGRAM:-}"
 if [[ -n "$term" && "$term" != "Apple_Terminal" ]]; then
-    err "clone: TERM_PROGRAM=$term not yet supported, falling back to Apple Terminal"
+    err "cloneClaudeConversation: TERM_PROGRAM=$term not yet supported, falling back to Apple Terminal"
 fi
 
 case "$mode" in
@@ -105,7 +105,7 @@ case "$mode" in
         # new window so the command always lands somewhere visible.
         front_count="$(osascript -e 'tell application "Terminal" to count windows' 2>/dev/null || echo 0)"
         if [[ "${front_count:-0}" -eq 0 ]]; then
-            err "clone: no front Terminal window — opening a new window instead"
+            err "cloneClaudeConversation: no front Terminal window — opening a new window instead"
             open_in_new_window "$inner_cmd"
             printf 'forked from %s into new window (no front window for tab)\n' "$session_id"
         else

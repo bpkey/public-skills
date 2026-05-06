@@ -7,7 +7,7 @@ set -euo pipefail
 err() { printf '%s\n' "$*" >&2; }
 
 if [[ $# -gt 0 ]]; then
-    err "newWindow: takes no arguments (got '$*')"
+    err "newClaudeWindow: takes no arguments (got '$*')"
     exit 2
 fi
 
@@ -32,7 +32,7 @@ open_in_new_window() {
 
 term="${TERM_PROGRAM:-}"
 if [[ -n "$term" && "$term" != "Apple_Terminal" ]]; then
-    err "newWindow: TERM_PROGRAM=$term not yet supported, falling back to Apple Terminal"
+    err "newClaudeWindow: TERM_PROGRAM=$term not yet supported, falling back to Apple Terminal"
 fi
 
 open_in_new_window "$inner_cmd"

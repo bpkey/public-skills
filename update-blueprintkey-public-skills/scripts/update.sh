@@ -1,31 +1,51 @@
 #!/usr/bin/env bash
-# Resolve the /clone skill's symlink chain to the local clone of the
-# public-skills repo and `git pull --ff-only` there. All skills in the repo
-# share the same clone, so one pull updates them all. After pulling, also
-# report any skill directories in the repo that aren't symlinked into
-# ~/.claude/skills/ yet — flagging the ones added by this pull.
+# Locate the local clone of the public-skills repo by probing the script's own
+# path and every symlink under ~/.claude/skills/, then `git pull --ff-only`
+# there. All skills in the repo share the same clone, so one pull updates them
+# all. After pulling, also report any skill directories in the repo that aren't
+# symlinked into ~/.claude/skills/ yet — flagging the ones added by this pull.
 
 set -euo pipefail
 
 err() { printf '%s\n' "$*" >&2; }
 
-skill_link="${HOME}/.claude/skills/clone"
+# Marker file present at the toplevel of any clone of public-skills. Used to
+# distinguish our repo from any other git repo a symlinked skill might live in.
+marker="update-blueprintkey-public-skills/SKILL.md"
 
-if [[ ! -e "$skill_link" ]]; then
-    err "update-blueprintkey-public-skills: ${skill_link} does not exist."
-    err "       Install /clone first — see https://github.com/bpkey/public-skills"
-    exit 1
-fi
+# Build candidate paths to probe for the repo root. We can't assume any one
+# specific skill is installed (the user may have installed only a subset), so
+# try several anchors and use the first one that lands in our repo.
+candidates=()
+# 1. This script's own path. If update-blueprintkey-public-skills was installed
+#    via clone+symlink, BASH_SOURCE[0] resolves into the repo.
+candidates+=("${BASH_SOURCE[0]}")
+# 2. Every symlink under ~/.claude/skills/. If any public skill was installed
+#    via clone+symlink, its target's git toplevel is the repo we want.
+shopt -s nullglob
+for entry in "${HOME}/.claude/skills"/*; do
+    [[ -L "$entry" ]] && candidates+=("$entry")
+done
+shopt -u nullglob
 
-# Follow every level of the symlink chain to the real on-disk path.
-target="$(realpath "$skill_link")"
+repo_root=""
+for c in "${candidates[@]}"; do
+    target="$(realpath "$c" 2>/dev/null || true)"
+    [[ -z "$target" ]] && continue
+    # `git -C` needs a directory.
+    [[ -d "$target" ]] || target="$(dirname "$target")"
+    root="$(git -C "$target" rev-parse --show-toplevel 2>/dev/null || true)"
+    [[ -z "$root" ]] && continue
+    [[ -f "$root/$marker" ]] || continue
+    repo_root="$root"
+    break
+done
 
-# Find the git toplevel above that path; this is the local clone of public-skills.
-repo_root="$(git -C "$target" rev-parse --show-toplevel 2>/dev/null || true)"
 if [[ -z "$repo_root" ]]; then
-    err "update-blueprintkey-public-skills: ${target} is not inside a git repo."
-    err "       /clone was likely installed via the curl/tarball method, which has no update mechanism."
-    err "       Reinstall via 'git clone' (option A in the public-skills README) to enable updates."
+    err "update-blueprintkey-public-skills: could not locate a clone+symlink install of any public-skill."
+    err "       Probed this script's own path and every symlink under ~/.claude/skills/."
+    err "       The skills were likely installed via the curl/tarball method, which has no update mechanism."
+    err "       Reinstall via 'git clone' (option A or B in the public-skills README) to enable updates."
     exit 1
 fi
 
