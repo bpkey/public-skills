@@ -17,6 +17,4 @@ Update later with `npx skills update`. Single skill: `npx skills add bpkey/skill
 
 ## Requirements
 
-- macOS with **Apple Terminal**. Other terminals aren't wired up — patches welcome.
-- `claude` CLI on `$PATH`.
-- For `tab` mode (default in both skills): **Accessibility permission** for Terminal — System Settings → Privacy & Security → Accessibility. The first invocation may fail with `not allowed to send keystrokes (1002)`; grant the permission, then quit and relaunch Claude Code. `window` mode needs no permission.
+Most skills here are macOS-only for now. Each skill checks its own prerequisites and tells you what to do if something's missing (e.g. extra OS permissions on first run) — no need to set anything up in advance.
