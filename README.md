@@ -7,14 +7,34 @@ A small collection of [Claude Code](https://claude.com/claude-code) helpers — 
 
 ## Install
 
+Powered by the [`skills`](https://github.com/vercel-labs/skills) CLI from Vercel Labs. It auto-detects every AI client on the machine (Claude Code, Cursor, Codex, Windsurf, …) and drops skills into each one's well-known directory.
+
+**Install all skills from this repo:**
+
 ```bash
 npx skills add bpkey/skills -y -g
 ```
 
-Auto-detects every AI client on the machine (Claude Code, Cursor, Codex, Windsurf, …) and drops the skills into each one's well-known directory.
+**Install a single skill:**
 
-Update later with `npx skills update`. Single skill: `npx skills add bpkey/skills -s <skill-name> -y -g`. Full docs: <https://github.com/vercel-labs/skills>.
+```bash
+npx skills add bpkey/skills -s <skill-name> -y -g
+```
+
+Replace `<skill-name>` with the folder name (e.g. `claude-forkchat`).
+
+**Update:**
+
+```bash
+npx skills update
+```
+
+**Uninstall:**
+
+```bash
+npx skills remove <skill-name> [<skill-name> ...] -y -g
+```
 
 ## Requirements
 
-Most skills here are macOS-only for now. Each skill checks its own prerequisites and tells you what to do if something's missing (e.g. extra OS permissions on first run) — no need to set anything up in advance.
+Each skill checks its own prerequisites and tells you what to do if something's missing (e.g. extra OS permissions on first run) — no need to set anything up in advance.
