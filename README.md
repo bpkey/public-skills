@@ -4,11 +4,11 @@ A small collection of [Claude Code](https://claude.com/claude-code) helpers we u
 
 ## What's here
 
-- **`/cloneClaudeConversation`** — fills a gap. Closest to the built-in `/branch`, but `/branch` swaps the current terminal into the fork; `/cloneClaudeConversation` keeps the original session alive in this tab and opens the fork **alongside** it — in a sibling tab by default (`/cloneClaudeConversation` or `/cloneClaudeConversation here`), or in a new window with `/cloneClaudeConversation new`. Backed by `claude --resume <id> --fork-session`.
-- **`/newClaudeTab`** — fills a gap. Opens a fresh (non-resumed) Claude session in a new Terminal *tab*, in the **same working directory** as the running Claude — so the new session boots straight into your current project, no manual `cd` needed. (Cmd+T natively lands in `~`.)
-- **`/newClaudeWindow`** — same as `/newClaudeTab` but a new Terminal *window* instead of a tab.
+- **`/claude-clone-conversation`** — fills a gap. Closest to the built-in `/branch`, but `/branch` swaps the current terminal into the fork; `/claude-clone-conversation` keeps the original session alive in this tab and opens the fork **alongside** it — in a sibling tab by default (`/claude-clone-conversation` or `/claude-clone-conversation here`), or in a new window with `/claude-clone-conversation new`. Backed by `claude --resume <id> --fork-session`.
+- **`/claude-newtab`** — fills a gap. Opens a fresh (non-resumed) Claude session in a new Terminal *tab*, in the **same working directory** as the running Claude — so the new session boots straight into your current project, no manual `cd` needed. (Cmd+T natively lands in `~`.)
+- **`/claude-newwindow`** — same as `/claude-newtab` but a new Terminal *window* instead of a tab.
 
-`/newClaudeTab` and `/newClaudeWindow` start fresh — no transcript carryover, but the new shell `cd`s to the same `cwd` you ran the command from, so `claude` boots into the same project context. `/cloneClaudeConversation` carries the current conversation forward (and also stays in `cwd`).
+`/claude-newtab` and `/claude-newwindow` start fresh — no transcript carryover, but the new shell `cd`s to the same `cwd` you ran the command from, so `claude` boots into the same project context. `/claude-clone-conversation` carries the current conversation forward (and also stays in `cwd`).
 
 ## Installing
 
@@ -22,7 +22,7 @@ The recommended way is the [`skills`](https://github.com/vercel-labs/skills) CLI
 npx skills add bpkey/skills -y -g
 ```
 
-**Install just one skill** — replace `<skill-name>` with the directory name in the repo (e.g. `cloneClaudeConversation`, `newClaudeTab`, `newClaudeWindow`):
+**Install just one skill** — replace `<skill-name>` with the directory name in the repo (e.g. `claude-clone-conversation`, `claude-newtab`, `claude-newwindow`):
 
 ```bash
 npx skills add bpkey/skills -s <skill-name> -y -g
@@ -62,11 +62,11 @@ ln -s "$PWD/<skill-name>" ~/.claude/skills/<skill-name>
 
 To update later, `cd` back into the clone and `git pull` — the symlinks pick up changes automatically, no reinstall needed.
 
-After installing by either method, the skills become available in your next Claude Code session — type `/cloneClaudeConversation`, `/newClaudeTab`, or `/newClaudeWindow`.
+After installing by either method, the skills become available in your next Claude Code session — type `/claude-clone-conversation`, `/claude-newtab`, or `/claude-newwindow`.
 
 ## Requirements
 
 - macOS with **Apple Terminal** as the active terminal (`$TERM_PROGRAM=Apple_Terminal`). Other terminals aren't wired up yet — patches welcome.
 - `claude` CLI on `$PATH`.
 - Standard tools already on every Mac: `lsof`, `osascript`, `sed`, `awk`.
-- For `/cloneClaudeConversation here` (the default) and `/newClaudeTab`: **macOS Accessibility permission** for `osascript` / Terminal, because the new-tab path sends Cmd+T via System Events. The first invocation may fail with `not allowed to send keystrokes (1002)` — grant permission in **System Settings → Privacy & Security → Accessibility**, then quit and relaunch Claude Code. `/cloneClaudeConversation new` and `/newClaudeWindow` don't need this permission.
+- For `/claude-clone-conversation here` (the default) and `/claude-newtab`: **macOS Accessibility permission** for `osascript` / Terminal, because the new-tab path sends Cmd+T via System Events. The first invocation may fail with `not allowed to send keystrokes (1002)` — grant permission in **System Settings → Privacy & Security → Accessibility**, then quit and relaunch Claude Code. `/claude-clone-conversation new` and `/claude-newwindow` don't need this permission.

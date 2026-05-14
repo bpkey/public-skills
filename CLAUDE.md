@@ -15,8 +15,6 @@ Skills that only work with a single tool — e.g. only useful inside Claude Code
 
 Skills that work across multiple tools skip the prefix and just describe the feature: `to-prd`, `grill-me`, etc.
 
-The historical skills already in this repo (`cloneClaudeConversation`, `newClaudeTab`, `newClaudeWindow`) predate this convention — leave them as-is unless explicitly asked to rename. The convention applies to **new** skills going forward.
-
 ## Tool-specific skills must declare incompatibility at runtime
 
 A skill prefixed with `<toolname>-` (e.g. `claude-*`, `cursor-*`) is, by definition, *not* expected to work in any other tool. Because `npx skills` installs every skill into every detected AI client, a user running `cursor-foo` from inside Claude Code (or vice versa) will otherwise see a confusing failure.

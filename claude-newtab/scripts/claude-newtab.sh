@@ -7,7 +7,7 @@ set -euo pipefail
 err() { printf '%s\n' "$*" >&2; }
 
 if [[ $# -gt 0 ]]; then
-    err "newClaudeTab: takes no arguments (got '$*')"
+    err "claude-newtab: takes no arguments (got '$*')"
     exit 2
 fi
 
@@ -47,7 +47,7 @@ open_in_new_tab() {
         printf '%s\n' "$err_output" >&2
         if [[ "$err_output" == *"not allowed to send keystrokes"* ]]; then
             err ""
-            err "newClaudeTab: needs macOS Accessibility permission to send Cmd+T."
+            err "claude-newtab: needs macOS Accessibility permission to send Cmd+T."
             err "        1. System Settings → Privacy & Security → Accessibility"
             err "        2. Enable Terminal and claude (click + to add if missing — \`which claude\` shows the path)"
             err "        3. Quit and relaunch Claude Code so the new permission takes effect"
@@ -58,14 +58,14 @@ open_in_new_tab() {
 
 term="${TERM_PROGRAM:-}"
 if [[ -n "$term" && "$term" != "Apple_Terminal" ]]; then
-    err "newClaudeTab: TERM_PROGRAM=$term not yet supported, falling back to Apple Terminal"
+    err "claude-newtab: TERM_PROGRAM=$term not yet supported, falling back to Apple Terminal"
 fi
 
 # Need a front Terminal window to add a tab to. If none, fall back to a new
 # window so the command always lands somewhere visible.
 front_count="$(osascript -e 'tell application "Terminal" to count windows' 2>/dev/null || echo 0)"
 if [[ "${front_count:-0}" -eq 0 ]]; then
-    err "newClaudeTab: no front Terminal window — opening a new window instead"
+    err "claude-newtab: no front Terminal window — opening a new window instead"
     open_in_new_window "$inner_cmd"
     printf 'opened new window with fresh claude in %s\n' "$PWD"
 else
