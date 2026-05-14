@@ -1,6 +1,6 @@
 # Skills
 
-A small collection of [Claude Code](https://claude.com/claude-code) helpers — Apple Terminal shims that fill gaps the built-in commands don't cover.
+AI skills to get more done.
 
 - **`/claude-samefolder [tab|window]`** — opens a fresh `claude` session in a new Terminal tab (default) or window, `cd`'d into your current project. (Plain Cmd+T lands in `~`.)
 - **`/claude-forkchat [tab|window]`** — forks the *current* conversation alongside this one. Like built-in `/branch`, but keeps both threads alive instead of swapping the current terminal into the fork. Backed by `claude --resume <id> --fork-session`.
