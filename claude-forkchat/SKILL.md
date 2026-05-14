@@ -19,14 +19,27 @@ Any other argument exits with an error.
 
 ## How to run
 
-Pass the user's argument straight through to the helper (default `tab` if none):
+The script takes two positional args: `mode` (`tab` or `window`, default `tab`) and an optional `fallback-base` slug used to name the fork when the current session has no name set.
+
+Before invoking, derive a short kebab-case slug (1–4 words, lowercase, hyphens, no spaces or punctuation) that summarises what the user has been doing in this conversation — e.g. `dns-cleanup`, `prd-draft`, `forkchat-tweak`. Pass it as the second argument. The script will only use it if the current session has no display name; otherwise the existing name takes priority. If you genuinely cannot tell what the conversation is about, omit the second arg and the script falls back to a session-id stub.
 
 ```bash
-~/.claude/skills/claude-forkchat/scripts/claude-forkchat.sh tab     # default
-~/.claude/skills/claude-forkchat/scripts/claude-forkchat.sh window
+~/.claude/skills/claude-forkchat/scripts/claude-forkchat.sh tab dns-cleanup
+~/.claude/skills/claude-forkchat/scripts/claude-forkchat.sh window dns-cleanup
+~/.claude/skills/claude-forkchat/scripts/claude-forkchat.sh tab          # no slug — uses session name or id stub
 ```
 
-Echo the script's stdout (`forked from <session-id> into new tab` or `... into new window`). On non-zero exit, surface stderr verbatim.
+Echo the script's stdout (`forked from <session-id> into new tab as '<fork-name>'` or `... into new window as '<fork-name>'`). On non-zero exit, surface stderr verbatim.
+
+## Fork naming
+
+Every fork is launched with `claude -n <name>` so it shows up labelled in the prompt box, `/resume` picker, and terminal title. The name is chosen in this order:
+
+1. **`<current-session-name>-fork`** — if the source session has a name (set via `/rename` or `claude -n`).
+2. **`<fallback-base>-fork`** — if the caller passed a slug as the second arg.
+3. **`fork-<first-8-of-session-id>`** — last-resort stub.
+
+So a session named `dns-cleanup` always forks to `dns-cleanup-fork`; an unnamed session forks to whatever slug the LLM derived from the conversation, suffixed with `-fork`.
 
 ## First-time execution (Accessibility permission for `tab` mode)
 
@@ -44,8 +57,9 @@ Set it up once:
 
 1. Finds the current session's transcript file via `lsof -p $PPID` (the Bash shell's parent is the running `claude` process).
 2. Falls back to the most recently modified JSONL under `~/.claude/projects/<encoded-cwd>/` if `lsof` returns nothing.
-3. Activates Terminal.app and either sends Cmd+T (`tab`) or calls `do script` with no `in` clause (`window`).
-4. `cd`s to the original `cwd` and runs `claude --resume <session-id> --fork-session`.
+3. Reads the current session's display name (if any) from `~/.claude/sessions/<pid>.json`, where Claude Code stores per-session metadata keyed by PID with `sessionId` and an optional `name` field set via `/rename`.
+4. Activates Terminal.app and either sends Cmd+T (`tab`) or calls `do script` with no `in` clause (`window`).
+5. `cd`s to the original `cwd` and runs `claude --resume <session-id> --fork-session -n <fork-name>`.
 
 If `tab` is requested but no Terminal window is open, the script falls back to `window` automatically.
 

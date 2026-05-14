@@ -15,6 +15,10 @@ case "$mode" in
         ;;
 esac
 
+# Optional second arg: a fallback base-name (kebab-case slug) the caller derives
+# from the conversation. Used only when the current session has no name set.
+fallback_base="${2:-}"
+
 # 1. Resolve the current session ID.
 #    The Bash tool spawns shells whose $PPID is the host `claude` process,
 #    which holds the live transcript JSONL open for writing. lsof tells us which.
@@ -40,8 +44,30 @@ fi
 
 session_id="$(basename "$session_path" .jsonl)"
 
+# 2. Look up the current session's display name (if any) in
+#    ~/.claude/sessions/<pid>.json — those files are one-line JSON keyed by PID
+#    with sessionId and an optional name field set via /rename.
+current_name=""
+sessions_dir="$HOME/.claude/sessions"
+if [[ -d "$sessions_dir" ]]; then
+    match="$(grep -l "\"sessionId\":\"$session_id\"" "$sessions_dir"/*.json 2>/dev/null | head -1 || true)"
+    if [[ -n "$match" ]]; then
+        current_name="$(grep -o '"name":"[^"]*"' "$match" | head -1 | sed 's/^"name":"\(.*\)"$/\1/' || true)"
+    fi
+fi
+
+# 3. Derive fork name. Priority: existing name > caller-supplied fallback > id stub.
+if [[ -n "$current_name" ]]; then
+    fork_name="${current_name}-fork"
+elif [[ -n "$fallback_base" ]]; then
+    fork_name="${fallback_base}-fork"
+else
+    fork_name="fork-${session_id:0:8}"
+fi
+
 quoted_pwd="$(printf '%q' "$PWD")"
-inner_cmd="cd $quoted_pwd && claude --resume $session_id --fork-session"
+quoted_name="$(printf '%q' "$fork_name")"
+inner_cmd="cd $quoted_pwd && claude --resume $session_id --fork-session -n $quoted_name"
 
 escape_for_applescript() {
     printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
@@ -89,17 +115,17 @@ fi
 case "$mode" in
     window)
         open_in_new_window "$inner_cmd"
-        printf 'forked from %s into new window\n' "$session_id"
+        printf "forked from %s into new window as '%s'\n" "$session_id" "$fork_name"
         ;;
     tab)
         front_count="$(osascript -e 'tell application "Terminal" to count windows' 2>/dev/null || echo 0)"
         if [[ "${front_count:-0}" -eq 0 ]]; then
             err "claude-forkchat: no front Terminal window — opening a new window instead"
             open_in_new_window "$inner_cmd"
-            printf 'forked from %s into new window (no front window for tab)\n' "$session_id"
+            printf "forked from %s into new window (no front window for tab) as '%s'\n" "$session_id" "$fork_name"
         else
             open_in_new_tab "$inner_cmd"
-            printf 'forked from %s into new tab\n' "$session_id"
+            printf "forked from %s into new tab as '%s'\n" "$session_id" "$fork_name"
         fi
         ;;
 esac
