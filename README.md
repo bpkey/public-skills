@@ -7,8 +7,6 @@ AI skills to get more done.
 
 ## Install
 
-Powered by the [`skills`](https://github.com/vercel-labs/skills) CLI from Vercel Labs. It auto-detects every AI client on the machine (Claude Code, Cursor, Codex, Windsurf, …) and drops skills into each one's well-known directory.
-
 **Install all skills from this repo:**
 
 ```bash
